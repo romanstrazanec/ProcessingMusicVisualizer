@@ -9,8 +9,7 @@ Visualizer classicVi;
 Minim minim;
 FFT fft;
 
-AudioOutput out;
-AudioPlayer mp3;
+AudioInput in;
 
 PFont directions;
 PImage fade;
@@ -31,18 +30,14 @@ void setup() {
   selection = false;
 
   minim = new Minim(this);
-  mp3 = minim.loadFile("mashUp.mp3", 2048);
-  out = minim.getLineOut(Minim.STEREO, 44100);
-  fft = new FFT(mp3.bufferSize(), mp3.sampleRate());
+  in = minim.getLineIn(Minim.STEREO, 2048);
+  fft = new FFT(in.bufferSize(), in.sampleRate());
   rectMode(CORNERS);
-  mp3.loop();
 
   fade = get(0, 0, width, height);
-  rWidth = width*0.99;
-  rHeight = height*0.99;
+  rWidth = width * 0.99;
+  rHeight = height * 0.99;
   classicVi = new Visualizer();
-
-  if (!started) mp3.pause();
 }
 
 void draw() {
@@ -53,11 +48,6 @@ void draw() {
     canPlay = true;
     background(0);
     classicVi.drawEQ();
-
-    if (canPlay) {
-      mp3.play();
-      pauseAndPlay();
-    }
   }
 }
 
@@ -66,19 +56,10 @@ void mouseClicked() {
 }
 
 void keyPressed() {
-  if (key == ESC) {
-    started = false;
-    mp3.pause();
-  }
-}
-
-void pauseAndPlay() {
-  if (key == 'p') mp3.pause();
-  else if (key == 'q') mp3.play();
+  if (key == ESC) started = false;
 }
 
 void close() {
-  out.close();
   minim.stop();
   super.stop();
 }

@@ -22,7 +22,7 @@ class Visualizer {
     stroke(hVal, 255, 225);
     colorMode(RGB);
 
-    fft.forward(mp3.mix);
+    fft.forward(in.mix);
     for (int i = 0; i < fft.specSize(); i += 50) {
       rect(i, height, i + 50, height - fft.getFreq(i / 2) * 1.2);
     }
